@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-center mb-4">Edit Habit</h2>
+<form method="post" class="p-4 border rounded bg-light">
+    <div class="mb-3">
+        <label for="name" class="form-label">Habit Name</label>
+        <input type="text" name="name" id="name" value="{{ habit.name }}" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="description" id="description" class="form-control">{{ habit.description }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Update Habit</button>
+</form>
+{% endblock %}
