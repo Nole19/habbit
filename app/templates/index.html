@@ -7,13 +7,16 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">{{ habit['name'] }}</h5>
-                    <p class="card-text">{{ habit['description'] }}</p>
+                    <p class="card-text">{{ habit['description'] or "No description provided." }}</p>
                     <p class="card-text">
                         <small class="text-muted">
-                            Started on: {{ habit['start_date'] if habit['start_date'] != "Not Set" else "No start date available." }}
+                            Started on: {{ habit['start_date'].strftime('%Y-%m-%d') if habit['start_date'] else "No start date available." }}
                         </small>
                     </p>
-                    <div class="d-flex justify-content-between">
+                    <form action="{{ url_for('mark_done', habit_id=habit['id']) }}" method="POST">
+                        <button type="submit" class="btn btn-success btn-sm">Mark Done for Today</button>
+                    </form>
+                    <div class="d-flex justify-content-between mt-2">
                         <a href="{{ url_for('edit_habit', habit_id=habit['id']) }}" class="btn btn-warning btn-sm">Edit</a>
                         <a href="{{ url_for('progress', habit_id=habit['id']) }}" class="btn btn-info btn-sm">View Progress</a>
                         <a href="{{ url_for('delete_habit', habit_id=habit['id']) }}" class="btn btn-danger btn-sm">Delete</a>
