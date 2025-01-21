@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
-from datetime import datetime
+from datetime import datetime, date
 from app import app
 from app.database import get_db_connection
 
@@ -171,7 +171,7 @@ def mark_done(habit_id):
             # Insert a new progress record for today
             cursor.execute(
                 "INSERT INTO habit_progress (habit_id, date, completed) VALUES (?, ?, ?)",
-                (habit_id, today, True)
+                (habit_id, today, 1)  # Use 1 for True (SQL BIT compatibility)
             )
             conn.commit()
             flash("Habit marked as done for today!")
