@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Progress for Habit: {{ habit['name'] }}</h2>
-<p>Description: {{ habit['description'] }}</p>
-<p>Start Date: 
+<h2 class="text-center">Progress for Habit: <strong>{{ habit['name'] }}</strong></h2>
+<p class="text-muted text-center">{{ habit['description'] }}</p>
+<p class="text-center">
+    <strong>Start Date:</strong> 
     {% if habit['start_date'] %}
         {{ habit['start_date'].strftime('%Y-%m-%d') }}
     {% else %}
@@ -10,9 +11,30 @@
     {% endif %}
 </p>
 
-<h3>Progress Records</h3>
-<table class="table">
-    <thead>
+<hr>
+
+<h3 class="text-center">Habit Analytics</h3>
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <strong>Completion Rate:</strong> {{ completion_rate }}%
+            </li>
+            <li class="list-group-item">
+                <strong>Current Streak:</strong> {{ streak }} days
+            </li>
+            <li class="list-group-item">
+                <strong>Longest Streak:</strong> {{ max_streak }} days
+            </li>
+        </ul>
+    </div>
+</div>
+
+<hr>
+
+<h3 class="text-center">Progress Records</h3>
+<table class="table table-bordered table-hover">
+    <thead class="table-primary">
         <tr>
             <th>Date</th>
             <th>Completed</th>
@@ -28,13 +50,25 @@
                     No date available
                 {% endif %}
             </td>
-            <td>{{ "Yes" if record['completed'] else "No" }}</td>
+            <td>
+                {% if record['completed'] %}
+                    <span class="badge bg-success">Yes</span>
+                {% else %}
+                    <span class="badge bg-danger">No</span>
+                {% endif %}
+            </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="2">No progress records found.</td>
+            <td colspan="2" class="text-center">No progress records found.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-primary">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+</div>
 {% endblock %}

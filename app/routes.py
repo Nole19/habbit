@@ -100,36 +100,41 @@ def edit_habit(habit_id):
 def progress(habit_id):
     conn = get_db_connection()
     cursor = conn.cursor()
-    try:
-        cursor.execute("SELECT id, date, completed FROM habit_progress WHERE habit_id = ?", (habit_id,))
-        progress_rows = cursor.fetchall()
-        progress = [
-            {
-                "id": row.id,
-                "date": row.date,  # Already a datetime.date object
-                "completed": row.completed,
-            }
-            for row in progress_rows
-        ]
+    today = date.today()
 
-        cursor.execute("SELECT id, name, description, start_date FROM habits WHERE id = ?", (habit_id,))
+    try:
+        # Fetch progress records
+        cursor.execute("SELECT date, completed FROM habit_progress WHERE habit_id = ?", (habit_id,))
+        progress_rows = cursor.fetchall()
+        progress = [{"date": row.date, "completed": row.completed} for row in progress_rows]
+
+        # Fetch habit details
+        cursor.execute("SELECT name, start_date FROM habits WHERE id = ?", (habit_id,))
         habit_row = cursor.fetchone()
         habit = {
-            "id": habit_row.id,
             "name": habit_row.name,
-            "description": habit_row.description or "No description provided.",
-            "start_date": habit_row.start_date,  # Already a datetime.date object
-            # No need for datetime.strptime here
-        } if habit_row else None
+            "start_date": habit_row.start_date
+        }
+
+        # Calculate analytics
+        total_days = (today - habit_row.start_date).days + 1
+        completed_days = sum(1 for p in progress if p["completed"])
+        completion_rate = round((completed_days / total_days) * 100, 2)
+
+        # Calculate streaks
+        streak = 0
+        max_streak = 0
+        for i in range(len(progress)):
+            if progress[i]["completed"]:
+                streak += 1
+                max_streak = max(max_streak, streak)
+            else:
+                streak = 0
     finally:
         cursor.close()
         conn.close()
 
-    if habit is None:
-        flash("Habit not found!")
-        return redirect(url_for("index"))
-
-    return render_template("progress.html", habit=habit, progress=progress)
+    return render_template("progress.html", habit=habit, progress=progress, completion_rate=completion_rate, streak=streak, max_streak=max_streak)
 
 
 @app.route("/delete/<int:habit_id>")

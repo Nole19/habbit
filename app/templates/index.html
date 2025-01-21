@@ -14,12 +14,20 @@
                         </small>
                     </p>
                     <form action="{{ url_for('mark_done', habit_id=habit['id']) }}" method="POST" style="display: inline;">
-                        <button type="submit" class="btn btn-success btn-sm">Mark Done for Today</button>
+                        <button type="submit" class="btn btn-success btn-sm">
+                            <i class="fas fa-check"></i> Done for Today
+                        </button>
                     </form>
                     <div class="d-flex justify-content-between mt-2">
-                        <a href="{{ url_for('edit_habit', habit_id=habit['id']) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{{ url_for('progress', habit_id=habit['id']) }}" class="btn btn-info btn-sm">View Progress</a>
-                        <a href="{{ url_for('delete_habit', habit_id=habit['id']) }}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{{ url_for('edit_habit', habit_id=habit['id']) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{{ url_for('progress', habit_id=habit['id']) }}" class="btn btn-info btn-sm">
+                            <i class="fas fa-chart-line"></i> Progress
+                        </a>
+                        <a href="{{ url_for('delete_habit', habit_id=habit['id']) }}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
                     </div>
                 </div>
             </div>
