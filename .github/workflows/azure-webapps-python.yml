@@ -21,7 +21,7 @@ name: Build and deploy Python app to Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: Omg777  # set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.12'              # set this to the Python version to use
+  PYTHON_VERSION: '3.12'     # set this to the Python version to use
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+      # Optional: Add step to run tests here (e.g., PyTest, Django test suites)
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
@@ -84,3 +84,7 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+
+      # Replace deprecated set-output with GITHUB_OUTPUT
+      - name: Set deployment URL output
+        run: echo "webapp-url=https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net" >> $GITHUB_OUTPUT
