@@ -65,7 +65,7 @@ jobs:
   deploy:
     permissions:
       contents: none
-    runs-on: ubuntu-24.04
+    runs-on: latest
     needs: build
     environment:
       name: 'Development'
