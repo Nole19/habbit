@@ -1,2 +1,6 @@
-Flask-3.1.0
-pyodbc-5.2.0
+flask
+pylint
+pytest
+python-dotenv
+gunicorn
+
