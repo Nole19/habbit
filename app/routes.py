@@ -147,3 +147,38 @@ def delete_habit(habit_id):
         cursor.close()
         conn.close()
     return redirect(url_for("index"))
+
+@app.route("/done/<int:habit_id>", methods=["POST"])
+def mark_done(habit_id):
+    """
+    Mark the habit as done for today in the habit_progress table.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    today = date.today()  # Get today's date
+
+    try:
+        # Check if there's already a progress record for today
+        cursor.execute(
+            "SELECT id FROM habit_progress WHERE habit_id = ? AND date = ?",
+            (habit_id, today)
+        )
+        existing_progress = cursor.fetchone()
+
+        if existing_progress:
+            flash("Habit already marked as done for today!")
+        else:
+            # Insert a new progress record for today
+            cursor.execute(
+                "INSERT INTO habit_progress (habit_id, date, completed) VALUES (?, ?, ?)",
+                (habit_id, today, True)
+            )
+            conn.commit()
+            flash("Habit marked as done for today!")
+    except Exception as e:
+        flash(f"Error marking habit as done: {e}")
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for("index"))
