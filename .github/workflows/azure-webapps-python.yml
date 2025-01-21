@@ -20,8 +20,8 @@
 name: Build and deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: Omg777  # set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.12'              # set this to the Python version to use
+  AZURE_WEBAPP_NAME: Omg777
+  PYTHON_VERSION: '3.12'
 
 on:
   push:
@@ -33,18 +33,19 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Use a stable image (22.04 for now)
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Python version
-        uses: actions/setup-python@v3.0.0
+      - name: Set up Python
+        uses: actions/setup-python@v3
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
-       - name: Create virtual environment
+      - name: Create virtual environment
         run: |
           python -m venv .venv
           . .venv/bin/activate
@@ -66,20 +67,20 @@ jobs:
   deploy:
     permissions:
       contents: none
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Use a stable image (22.04 for now)
     needs: build
     environment:
       name: 'Development'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: python-app
           path: .
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
