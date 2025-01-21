@@ -65,7 +65,7 @@ jobs:
   deploy:
     permissions:
       contents: none
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: build
     environment:
       name: 'Development'
